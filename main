@@ -1,0 +1,73 @@
+% Родово-видові зв'язки (is_a)
+is_a(car, vehicle).
+is_a(bike, vehicle).
+is_a(truck, vehicle).
+is_a(electric_car, car).
+is_a(hybrid_car, car).
+is_a(mountain_bike, bike).
+is_a(road_bike, bike).
+
+% Зв'язки частина-ціле (part_of)
+part_of(engine, car).
+part_of(wheel, car).
+part_of(wheel, bike).
+part_of(battery, electric_car).
+part_of(battery, hybrid_car).
+part_of(handlebar, bike).
+part_of(frame, bike).
+
+% Додаткові зв'язки
+is_a(sedan, car).
+is_a(suv, car).
+part_of(trailer, truck).
+part_of(cargo_space, truck).
+
+% Правила для родо-видових зв'язків
+is_a(X, Z) :- 
+    is_a(X, Y), 
+    write('Checking: '), write(X), write(' is_a '), write(Y), nl,
+    is_a(Y, Z),
+    write('Derived: '), write(X), write(' is_a '), write(Z), nl.
+
+% Правила для частини-цілого
+part_of(X, Z) :- 
+    part_of(X, Y),
+    write('Checking: '), write(X), write(' part_of '), write(Y), nl,
+    part_of(Y, Z),
+    write('Derived: '), write(X), write(' part_of '), write(Z), nl.
+
+part_of(X, Z) :- 
+    part_of(X, Y),
+    write('Checking: '), write(X), write(' part_of '), write(Y), nl,
+    is_a(Y, Z),
+    write('Derived: '), write(X), write(' part_of '), write(Z), nl.
+
+% Ініціалізація програми
+:- initialization(main).
+
+% Основна функція
+main :-
+    % Перевірка родо-видових зв'язків
+    test_is_a(electric_car, vehicle),
+    test_is_a(car, vehicle),
+    test_is_a(mountain_bike, vehicle),
+    
+    % Перевірка частини-цілого
+    test_part_of(battery, car),
+    test_part_of(engine, vehicle),
+    test_part_of(wheel, vehicle),
+    halt.
+
+% Тести для is_a
+test_is_a(X, Y) :-
+    ( is_a(X, Y) ->
+        format('Yes, ~w is a ~w.~n', [X, Y]);
+        format('No, ~w is not a ~w.~n', [X, Y])
+    ).
+
+% Тести для part_of
+test_part_of(X, Y) :-
+    ( part_of(X, Y) ->
+        format('Yes, ~w is part of ~w.~n', [X, Y]);
+        format('No, ~w is not part of ~w.~n', [X, Y])
+    ).
